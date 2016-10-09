@@ -1,6 +1,9 @@
 package main
 
-import "github.com/philippta/franky"
+import (
+	"github.com/philippta/franky"
+	"github.com/philippta/franky/poll"
+)
 
 func main() {
 	c := franky.NewClient("franky")
@@ -26,6 +29,12 @@ func main() {
 		e.Client.Quit()
 		quit <- 1
 	})
+
+	// Register all poll handlers
+	c.HandleMessage(poll.NewPollPattern, poll.NewPollHandler)
+	c.HandleMessage(poll.NewOptionPattern, poll.NewOptionHandler)
+	c.HandleMessage(poll.VotePattern, poll.VoteHandler)
+	c.HandleMessage(poll.VotesPattern, poll.VotesHandler)
 
 	// Start the connection to the IRC Server
 	c.Connect()
